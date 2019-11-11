@@ -489,7 +489,7 @@ int ll_containsAll(LinkedList* this,LinkedList* this2)
     return returnAux;
 }
 
-    int i;
+int i;
 /** \brief Crea y retorna una nueva lista con los elementos indicados
  *
  * \param pList LinkedList* Puntero a la lista
@@ -512,7 +512,7 @@ LinkedList* ll_subList(LinkedList* this,int from,int to)
         if(from<=len && to<=len)
         {
             cloneArray=ll_newLinkedList();//creo una nueva lista
-            for(i=from;i<to;i++)//recorro desde(from) hasta(to)
+            for(i=from; i<to; i++) //recorro desde(from) hasta(to)
             {
                 pElement=ll_get(this,i);//obtengo el elemento de this en el indice indicado
                 if(pElement!=NULL)
@@ -558,7 +558,49 @@ LinkedList* ll_clone(LinkedList* this)
 int ll_sort(LinkedList* this, int (*pFunc)(void*,void*), int order)
 {
     int returnAux =-1;
-
+    int len;
+    int i,j;
+    void* pElement1=NULL;
+    void* pElement2=NULL;
+    void* pAux=NULL;
+    int numero;
+    if(this!=NULL && pFunc!=NULL &&(order==0 || order==1))
+    {
+        len=ll_len(this);//obtengo el largo de la lista
+        for(i=0; i<len-1; i++)
+        {
+            pElement1=ll_get(this,i);//obtenfo el elemento en la posicion i
+            for(j=i+1; j<len; j++)
+            {
+                pElement2=ll_get(this,j);//obtengo el elemento en la posicion j
+                if(order==1)//si el orden es ascendente
+                {
+                    //pFunc retorna [1] en caso de ser mayor o [-1] en caso de ser menor
+                    numero=pFunc(pElement1,pElement2);
+                    if(numero==1)
+                    {
+                        pAux=pElement1;
+                        pElement1=pElement2;
+                        pElement2=pAux;
+                    }
+                }
+                else if(order==0)
+                {
+                    numero=pFunc(pElement1,pElement2);
+                    if(numero==-1)
+                    {
+                        pAux=pElement2;
+                        pElement2=pElement1;
+                        pElement1=pAux;
+                    }
+                }
+                ll_set(this,j,pElement2);
+                ll_set(this,i,pElement1);
+            }
+        }
+        returnAux=0;
+    }
     return returnAux;
 }
+
 
